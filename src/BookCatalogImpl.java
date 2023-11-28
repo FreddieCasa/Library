@@ -2,18 +2,17 @@ import lt.techin.library.Book;
 import lt.techin.library.BookCatalog;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Predicate;
 
 public class BookCatalogImpl implements BookCatalog {
 
 
-
+    Set<Book> booklist = new HashSet<>();
 
     @Override
     public void addBook(Book book) {
-
+        booklist.add(book);
     }
 
     @Override
