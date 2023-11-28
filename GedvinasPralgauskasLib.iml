@@ -13,7 +13,9 @@
           <root url="jar://$MODULE_DIR$/../../library-exam-part1/library-exam-part1/library-exam-1.0-SNAPSHOT.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../library-exam-part1/library-exam-part1/library-exam-1.0-SNAPSHOT.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
   </component>
