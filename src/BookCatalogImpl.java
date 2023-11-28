@@ -1,6 +1,5 @@
 import lt.techin.library.Book;
 import lt.techin.library.BookCatalog;
-
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Predicate;
@@ -17,31 +16,48 @@ public class BookCatalogImpl implements BookCatalog {
 
     @Override
     public Book getBookByIsbn(String s) {
+        for (Book book: booklist) {
+            if (book.getIsbn().equals(s)){
+                return getBookByIsbn(s);
+            }
+        }
         return null;
     }
 
     @Override
     public List<Book> searchBooksByAuthor(String s) {
+        
         return null;
     }
 
     @Override
     public int getTotalNumberOfBooks() {
-        return 0;
+        return booklist.size();
     }
 
     @Override
     public boolean isBookInCatalog(String s) {
+        for (Book book: booklist) {
+            if (book.getIsbn().equals(s)){
+                return true;
+            }
+        }
         return false;
     }
 
     @Override
     public boolean isBookAvailable(String s) {
+        for (Book book: booklist) {
+            if (book.isAvailable()){
+                return true;
+            }
+        }
         return false;
     }
 
     @Override
     public Book findNewestBookByPublisher(String s) {
+
         return null;
     }
 
