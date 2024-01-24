@@ -1,33 +1,71 @@
+import lt.techin.library.Author;
 import lt.techin.library.Book;
 import lt.techin.library.BookCatalog;
+import lt.techin.library.BookNotFoundException;
+
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.groupingBy;
 
 public class BookCatalogImpl implements BookCatalog {
 
+    ArrayList<Book> booklist = new ArrayList<>();
 
-    Set<Book> booklist = new HashSet<>();
 
     @Override
     public void addBook(Book book) {
-        booklist.add(book);
+
+        if (book == null) {
+            throw new IllegalArgumentException();
+        }
+        if (book.getIsbn() == null) {
+            throw new IllegalArgumentException();
+        }
+        if (book.getIsbn().isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+        if (book.getTitle() == null) {
+            throw new IllegalArgumentException();
+        }
+        if (book.getTitle().isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+
+        if (booklist.contains(book)) {
+
+        } else {
+            booklist.add(book);
+        }
+
+
     }
 
     @Override
     public Book getBookByIsbn(String s) {
-        for (Book book: booklist) {
-            if (book.getIsbn().equals(s)){
-                return getBookByIsbn(s);
+
+           for (Book book : booklist) {
+            if (book.getIsbn().equals(s)) {
+                return book;
             }
         }
-        return null;
+        throw new BookNotFoundException("BookNotFoundException");
     }
 
     @Override
     public List<Book> searchBooksByAuthor(String s) {
-        
-        return null;
+        List<Book> booksByAuthors = new ArrayList<>();
+        for (Book book : booklist) {
+            for (Author author : book.getAuthors()) {
+                if (author.getName().equals(s)) {
+                    booksByAuthors.add(book);
+                }
+            }
+        }
+
+        return booksByAuthors;
     }
 
     @Override
@@ -37,8 +75,8 @@ public class BookCatalogImpl implements BookCatalog {
 
     @Override
     public boolean isBookInCatalog(String s) {
-        for (Book book: booklist) {
-            if (book.getIsbn().equals(s)){
+        for (Book book : booklist) {
+            if (book.getIsbn().equals(s)) {
                 return true;
             }
         }
@@ -47,8 +85,8 @@ public class BookCatalogImpl implements BookCatalog {
 
     @Override
     public boolean isBookAvailable(String s) {
-        for (Book book: booklist) {
-            if (book.isAvailable()){
+        for (Book book : booklist) {
+            if (book.isAvailable()) {
                 return true;
             }
         }
@@ -57,27 +95,38 @@ public class BookCatalogImpl implements BookCatalog {
 
     @Override
     public Book findNewestBookByPublisher(String s) {
-
-        return null;
+       return  booklist
+               .stream()
+               .filter(b ->b.getPublisher().equals(s))
+               .max(Comparator.comparing(Book::getPublicationYear))
+               .orElseThrow(() -> new BookNotFoundException("BookNotFoundException"));
     }
 
     @Override
     public List<Book> getSortedBooks() {
-        return null;
+
+        return booklist.stream()
+                .sorted(Comparator.comparing(Book::getPublicationYear))
+                .collect(Collectors.toList());
     }
 
     @Override
     public Map<String, List<Book>> groupBooksByPublisher() {
-        return null;
+        return booklist.stream().collect(groupingBy(Book::getPublisher));
+
     }
 
     @Override
     public List<Book> filterBooks(Predicate<Book> predicate) {
-        return null;
+
+        return booklist.stream().filter(predicate).toList();
     }
 
     @Override
     public BigDecimal calculateTotalPrice() {
-        return null;
+
+        return booklist.stream()
+                .map(Book::getPrice).
+                reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }
